@@ -23,6 +23,11 @@ export function middleware(request: NextRequest) {
     // Simulate getting token from localStorage by passing it in a header for demonstration
     const token = request.cookies.get('token')?.value;
 
+    const pathname = request.nextUrl.pathname;
+    if (pathname.startsWith('/login')) {
+        return NextResponse.next();
+    }
+
     // Check if the current route is public
     if (publicRoutes.includes(request.nextUrl.pathname)) {
         // If the user is logged in, redirect them from the login page
@@ -53,6 +58,11 @@ export function middleware(request: NextRequest) {
         const decoded = jwtDecode<DecodedToken>(token);
         const userRole = decoded.role;
 
+        if (!userRole || !(userRole in roleRedirects)) {
+            console.warn('Invalid or missing role in token. Redirecting to login.');
+            return NextResponse.redirect(new URL('/login', request.url));
+        }
+
         // Check if the token is expired
         if (decoded.exp * 1000 < Date.now()) {
             console.log('Token expired, redirecting to login.');
@@ -72,7 +82,7 @@ export function middleware(request: NextRequest) {
 
     } catch (error) {
         // Token is invalid, redirect to login
-        console.error('Invalid token, redirecting to login.', error);
+        console.error('Failed to decode token or token invalid:', error);
         return NextResponse.redirect(new URL('/login', request.url));
     }
 }

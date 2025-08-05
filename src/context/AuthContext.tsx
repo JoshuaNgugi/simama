@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import api from '@/services/api';
+import Cookies from 'js-cookie';
 
 type User = {
     id: string;
@@ -26,29 +27,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
+        const storedToken = Cookies.get('token');
         if (storedToken) {
             try {
                 const decodedUser = jwtDecode<User>(storedToken);
+                if (!decodedUser.role) {
+                    throw new Error('Missing role in token');
+                }
                 setUser(decodedUser);
                 setToken(storedToken);
             } catch (error) {
-                console.error('Invalid token found in localStorage', error);
-                localStorage.removeItem('token');
+                console.error('Invalid token found in cookies', error);
+                Cookies.remove('token');
             }
         }
         setLoading(false);
     }, []);
 
     const login = (authToken: string) => {
-        localStorage.setItem('token', authToken);
+        Cookies.set('token', authToken, { expires: 7, secure: false, sameSite: 'Strict' });
+        setToken(authToken);
+
         const decodedUser = jwtDecode<User>(authToken);
         setUser(decodedUser);
-        setToken(authToken);
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
+        // Remove the token from the cookie
+        Cookies.remove('token');
         setUser(null);
         setToken(null);
     };
