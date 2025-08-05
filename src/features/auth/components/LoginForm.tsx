@@ -38,7 +38,8 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setError(null);
-      const response = await api.post('/api/auth/login', data); // Use the correct API endpoint
+      console.log(data);
+      const response = await api.post('/api/auth/login', data);
 
       const { token } = response.data;
       login(token);
