@@ -10,7 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
 
 // Define types for fetched data
-type Patient = { id: string; name: string };
+type Patient = { id: string; firstName: string; lastName: string };
 type Drug = { id: string; name: string };
 
 // Define validation schema
@@ -116,7 +116,7 @@ export default function CreatePrescriptionPage() {
                     >
                         <option value="">Select a patient</option>
                         {patients.map(patient => (
-                            <option key={patient.id} value={patient.id}>{patient.name}</option>
+                            <option key={patient.id} value={patient.id}>{patient.firstName} {patient.lastName}</option>
                         ))}
                     </select>
                     {errors.patientId && <p className="mt-1 text-sm text-red-600">{errors.patientId.message}</p>}

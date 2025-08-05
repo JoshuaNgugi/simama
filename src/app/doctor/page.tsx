@@ -55,7 +55,7 @@ export default function DoctorDashboardPage() {
                         {patients.map(patient => (
                             <li key={patient.id} className="py-4 flex justify-between items-center">
                                 <div>
-                                    <p className="text-lg font-medium text-gray-900">{patient.name}</p>
+                                    <p className="text-lg font-medium text-gray-900">{patient.firstName} {patient.lastName}</p>
                                     <p className="text-sm text-gray-500">{patient.email}</p>
                                 </div>
                             </li>
