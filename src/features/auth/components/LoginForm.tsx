@@ -99,7 +99,7 @@ export function LoginForm() {
                     {...register('role')}
                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-50 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 >
-                    <option value="" disabled hidden>Select your role</option>
+                    <option value="">Select your role</option>
                     <option value="doctor">Doctor</option>
                     <option value="patient">Patient</option>
                     <option value="pharmacist">Pharmacist</option>
