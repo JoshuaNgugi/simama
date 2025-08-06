@@ -1,20 +1,42 @@
-import { Inter } from 'next/font/google';
+import Link from 'next/link';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { LoginForm } from '@/features/auth/components/LoginForm';
+import { Dancing_Script } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const dancingScript = Dancing_Script({
+    subsets: ['latin'],
+    weight: '700',
+    variable: '--font-dancing-script',
+});
 
 export default function LoginPage() {
     return (
-        <main className={`flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100 ${inter.className}`}>
-            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl border border-gray-200">
-                <h2 className="text-3xl font-bold text-center text-gray-900">
-                    Sign in to your account
-                </h2>
-                <p className="text-center text-sm text-gray-600">
-                    Welcome to Simama!
-                </p>
+        <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
+            {/* Back to Home Link */}
+            <Link href="/" className="absolute top-6 left-6 inline-flex items-center text-gray-500 hover:text-teal-600 transition-colors duration-200">
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                Back to Home
+            </Link>
+
+            <div className="w-full max-w-md space-y-8 p-10 bg-white rounded-xl shadow-2xl border border-gray-200">
+                <div className="text-center">
+                    <h1 className={`${dancingScript.className} text-5xl font-bold text-gray-800`}>
+                        Simama
+                    </h1>
+                    <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
+                        Sign in to your account
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Don't have an account?{' '}
+                        <Link href="/register" className="font-medium text-teal-600 hover:text-teal-500">
+                            Sign up today!
+                        </Link>
+                    </p>
+                </div>
+
+                {/* The LoginForm component will be rendered here */}
                 <LoginForm />
             </div>
-        </main>
+        </div>
     );
 }
