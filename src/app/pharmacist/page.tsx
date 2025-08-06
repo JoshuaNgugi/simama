@@ -10,8 +10,7 @@ type Prescription = {
     id: string;
     drugName: string;
     dosage: string;
-    instructions: string;
-    status: 'Active' | 'Fulfilled' | 'Canceled';
+    status: 'Pending' | 'Dispensed' | 'Rejected';
     patientName: string;
     doctorName: string;
 };
@@ -44,7 +43,7 @@ export default function PharmacistDashboardPage() {
 
     const handleFulfill = async (prescriptionId: string) => {
         try {
-            await api.put(`/api/prescriptions/${prescriptionId}`, { status: 'Fulfilled' });
+            await api.put(`/api/prescription/${prescriptionId}`, { status: 2 }); // Dispensed = 2
             // Re-fetch prescriptions to update the list
             fetchPrescriptions();
         } catch (err) {
@@ -62,7 +61,7 @@ export default function PharmacistDashboardPage() {
         return null;
     }
 
-    const activePrescriptions = prescriptions.filter(p => p.status === 'Active');
+    const activePrescriptions = prescriptions.filter(p => p.status === 'Pending');
 
     return (
         <div className="flex min-h-screen bg-gray-100 font-sans">
@@ -120,7 +119,7 @@ export default function PharmacistDashboardPage() {
                                             </button>
                                         </div>
                                     </div>
-                                    <p className="mt-2 text-sm text-gray-500">Instructions: {prescription.instructions}</p>
+                                    <p className="mt-2 text-sm text-gray-500">Dosage: {prescription.dosage}</p>
                                 </li>
                             ))}
                         </ul>
