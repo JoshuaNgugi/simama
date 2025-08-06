@@ -18,7 +18,6 @@ const prescriptionFormSchema = z.object({
     patientId: z.string().nonempty({ message: 'Patient selection is required.' }),
     drugId: z.string().nonempty({ message: 'Drug selection is required.' }),
     dosage: z.string().nonempty({ message: 'Dosage is required.' }),
-    instructions: z.string().min(10, { message: 'Instructions must be at least 10 characters long.' }),
 });
 
 type PrescriptionFormValues = z.infer<typeof prescriptionFormSchema>;
@@ -68,8 +67,16 @@ export default function CreatePrescriptionPage() {
     const onSubmit = async (data: PrescriptionFormValues) => {
         try {
             setApiError(null);
+
+            const prescriptionData = {
+                PatientId: parseInt(data.patientId),
+                DoctorId: parseInt(user!.id),
+                DrugId: parseInt(data.drugId),
+                Dosage: data.dosage,
+            };
+
             // API call to create a new prescription
-            await api.post('/api/prescriptions', data);
+            await api.post('/api/prescription', prescriptionData);
 
             alert('Prescription created successfully!');
             router.push('/doctor'); // Redirect back to dashboard
@@ -148,18 +155,6 @@ export default function CreatePrescriptionPage() {
                         className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
                     {errors.dosage && <p className="mt-1 text-sm text-red-600">{errors.dosage.message}</p>}
-                </div>
-
-                {/* Instructions Textarea */}
-                <div>
-                    <label htmlFor="instructions" className="block text-sm font-medium text-gray-700">Instructions</label>
-                    <textarea
-                        id="instructions"
-                        rows={4}
-                        {...register('instructions')}
-                        className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                    {errors.instructions && <p className="mt-1 text-sm text-red-600">{errors.instructions.message}</p>}
                 </div>
 
                 {/* Submit Button */}
