@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import api from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 // Define types for fetched data
 type Patient = { id: string; firstName: string; lastName: string };
@@ -78,12 +79,13 @@ export default function CreatePrescriptionPage() {
             // API call to create a new prescription
             await api.post('/api/prescription', prescriptionData);
 
-            alert('Prescription created successfully!');
+            toast.success('Prescription created successfully!');
             router.push('/doctor'); // Redirect back to dashboard
         } catch (err: any) {
             console.error('Failed to create prescription:', err);
             const errorMessage = err.response?.data?.message || 'Failed to create prescription.';
             setApiError(errorMessage);
+            toast.error(errorMessage);
         }
     };
 

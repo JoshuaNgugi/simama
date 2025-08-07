@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { HomeIcon, ArchiveBoxIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { FulfillConfirmationModal } from '@/components/FulfillConfirmationModal';
+import { toast } from 'react-hot-toast';
 
 type User = {
     id: number;
@@ -84,10 +85,10 @@ export default function PharmacistDashboardPage() {
             setIsModalOpen(false);
             setSelectedPrescription(null);
             fetchPrescriptions();
-            alert('Prescription has been fulfilled');
+            toast.success('Prescription has been fulfilled');
         } catch (err) {
             console.error('Failed to fulfill prescription:', err);
-            alert('Failed to fulfill prescription.');
+            toast.error('Failed to fulfill prescription.');
         }
     };
 

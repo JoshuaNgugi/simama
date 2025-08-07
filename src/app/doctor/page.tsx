@@ -6,6 +6,7 @@ import api from '@/services/api';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { toast } from 'react-hot-toast';
 
 type User = {
     id: number;
@@ -72,10 +73,10 @@ export default function DoctorDashboardPage() {
             try {
                 await api.delete(`/api/prescription/${prescriptionId}`);
                 setPrescriptions(prescriptions.filter(p => p.id !== prescriptionId));
-                alert('Prescription deleted successfully.');
+                toast.success('Prescription deleted successfully.');
             } catch (err: any) {
                 console.error('Failed to delete prescription:', err);
-                alert('Failed to delete prescription. Please try again.');
+                toast.error('Failed to delete prescription. Please try again.');
             }
         }
     };

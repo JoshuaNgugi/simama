@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import api from '@/services/api';
+import toast from 'react-hot-toast';
 
 const registerFormSchema = z
     .object({
@@ -47,12 +47,13 @@ export function RegisterForm() {
             // TODO: add this on backend
             // await api.post('/api/auth/register', registrationData);
 
-            alert('Site is still under active development, we will be adding Registration soon.');
+            toast.success('Site is still under active development, we will be adding Registration soon.');
             router.push('/login');
         } catch (err: any) {
             console.error('Registration failed:', err);
             const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
             setError(errorMessage);
+            toast.error(errorMessage);
         }
     };
 
