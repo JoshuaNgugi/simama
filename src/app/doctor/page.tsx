@@ -105,24 +105,26 @@ export default function DoctorDashboardPage() {
                 {!isLoading && !error && prescriptions.length > 0 && (
                     <ul className="divide-y divide-gray-200">
                         {prescriptions.map(prescription => (
-                            <li key={prescription.id} className="py-4 flex justify-between items-center">
-                                <div>
-                                    <p className="text-lg font-medium text-gray-900">
-                                        {prescription.drug.name} for {prescription.patient.firstName} {prescription.patient.lastName}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Dosage: {prescription.dosage}
-                                    </p>
-                                    <p className="text-sm text-gray-500 mt-1">
-                                        Prescribed on: {format(new Date(prescription.prescribedOn), 'MM/dd/yyyy')}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Status: {PrescriptionStatus[prescription.status]}
-                                    </p>
-                                </div>
+                            <li key={prescription.id} className="py-4 flex justify-between items-center group">
+                                <Link href={`/prescription/${prescription.id}`} className="flex-grow">
+                                    <div className="flex-grow group-hover:text-indigo-600 transition-colors duration-200">
+                                        <p className="text-lg font-medium text-gray-900">
+                                            {prescription.drug.name} for {prescription.patient.firstName} {prescription.patient.lastName}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                            Dosage: {prescription.dosage}
+                                        </p>
+                                        <p className="text-sm text-gray-500 mt-1">
+                                            Prescribed on: {format(new Date(prescription.prescribedOn), 'MM/dd/yyyy')}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                            Status: {PrescriptionStatus[prescription.status]}
+                                        </p>
+                                    </div>
+                                </Link>
                                 <button
                                     onClick={() => handleDeletePrescription(prescription.id)}
-                                    className="p-2 rounded-full text-red-500 hover:bg-red-50 transition-colors duration-200"
+                                    className="p-2 ml-4 rounded-full text-red-500 hover:bg-red-50 transition-colors duration-200"
                                 >
                                     <TrashIcon className="h-5 w-5" />
                                 </button>

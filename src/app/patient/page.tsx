@@ -4,16 +4,39 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/services/api';
 import { useRouter } from 'next/navigation';
-import { HomeIcon, UserIcon, ArrowRightStartOnRectangleIcon, BellIcon } from '@heroicons/react/24/outline'; // Importing icons
+import { HomeIcon, UserIcon, ArrowRightStartOnRectangleIcon, BellIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { format } from 'date-fns';
+
+type User = {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+};
+
+type Drug = {
+    id: number;
+    name: string;
+};
 
 type Prescription = {
-    id: string;
-    drugName: string;
+    id: number;
     dosage: string;
-    instructions: string;
-    status: 'Active' | 'Fulfilled' | 'Canceled';
-    doctorName: string;
+    prescribedOn: string;
+    status: number;
+    fulfilledAt: Date;
+    patient: User;
+    doctor: User;
+    pharmacist?: User | null;
+    drug: Drug;
 };
+
+enum PrescriptionStatus {
+    Pending = 1,
+    Dispensed = 2,
+    Rejected = 3
+}
 
 export default function PatientDashboardPage() {
     const { user, logout } = useAuth();
@@ -98,16 +121,20 @@ export default function PatientDashboardPage() {
                     {!isLoading && !error && prescriptions.length > 0 && (
                         <ul className="divide-y divide-gray-200">
                             {prescriptions.map(prescription => (
-                                <li key={prescription.id} className="py-4">
-                                    <div className="flex justify-between items-center">
-                                        <p className="text-lg font-medium text-gray-900">{prescription.drugName}</p>
-                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            {prescription.status}
-                                        </span>
-                                    </div>
-                                    <p className="mt-1 text-sm text-gray-500">Dosage: {prescription.dosage}</p>
-                                    <p className="text-sm text-gray-500">Instructions: {prescription.instructions}</p>
-                                    <p className="text-sm text-gray-400 mt-2">Prescribed by: Dr. {prescription.doctorName}</p>
+                                <li key={prescription.id} className="py-4 flex items-center group">
+                                    <Link href={`/prescription/${prescription.id}`} className="flex-grow">
+                                        <div className="flex-grow group-hover:text-indigo-600 transition-colors duration-200">
+                                            <p className="text-lg font-medium text-gray-900">
+                                                {prescription.drug.name} for {prescription.doctor.firstName} {prescription.doctor.lastName}
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                Dosage: {prescription.dosage}
+                                            </p>
+                                            <p className="text-sm text-gray-500 mt-1">
+                                                Prescribed on: {format(new Date(prescription.prescribedOn), 'MM/dd/yyyy')}
+                                            </p>
+                                        </div>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

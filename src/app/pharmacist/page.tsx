@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/services/api';
 import { useRouter } from 'next/navigation';
 import { HomeIcon, ArchiveBoxIcon, CheckBadgeIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 type User = {
     id: number;
@@ -128,23 +129,28 @@ export default function PharmacistDashboardPage() {
                     {!isLoading && !error && activePrescriptions.length > 0 && (
                         <ul className="divide-y divide-gray-200">
                             {activePrescriptions.map(prescription => (
-                                <li key={prescription.id} className="py-4">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <p className="text-lg font-medium text-gray-900">{prescription.drug.name}</p>
-                                            <p className="mt-1 text-sm text-gray-500">For: {prescription.patient.firstName} {prescription.patient.lastName}</p>
+                                <li key={prescription.id} className="py-4 flex justify-between items-center group">
+                                    <Link href={`/prescription/${prescription.id}`} className="flex-grow">
+                                        <div className="flex-grow group-hover:text-indigo-600 transition-colors duration-200">
+                                            <p className="text-lg font-medium text-gray-900">
+                                                {prescription.drug.name} for {prescription.patient.firstName} {prescription.patient.lastName}
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                Dosage: {prescription.dosage}
+                                            </p>
+                                            <p className="text-sm text-gray-500 mt-1">
+                                                Prescribed by: {prescription.doctor.firstName} {prescription.doctor.lastName}
+                                            </p>
                                         </div>
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => handleFulfill(prescription.id.toString())}
-                                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                            >
-                                                <CheckBadgeIcon className="h-5 w-5 mr-2" />
-                                                Fulfill
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <p className="mt-2 text-sm text-gray-500">Dosage: {prescription.dosage}</p>
+                                    </Link>
+                                    {!prescription.status && (
+                                        <button
+                                            onClick={() => handleFulfill(prescription.id.toString())}
+                                            className="px-4 py-2 ml-4 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors duration-200"
+                                        >
+                                            Fulfill
+                                        </button>
+                                    )}
                                 </li>
                             ))}
                         </ul>
