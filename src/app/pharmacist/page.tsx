@@ -71,7 +71,7 @@ export default function PharmacistDashboardPage() {
                     <h1 className="text-2xl font-bold text-gray-800 mb-6">Simama</h1>
                     <div className="mb-8">
                         <p className="text-lg font-semibold text-gray-700">Welcome,</p>
-                        <p className="text-gray-500 text-sm">{user.email}</p>
+                        <p className="text-gray-500 text-sm">{user.firstname} {user.lastname}</p>
                     </div>
                     <nav className="space-y-2">
                         <a href="/pharmacist" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">

@@ -9,6 +9,8 @@ type User = {
     id: string;
     email: string;
     role: 'doctor' | 'patient' | 'pharmacist';
+    firstname: string;
+    lastname: string;
 };
 
 type AuthContextType = {

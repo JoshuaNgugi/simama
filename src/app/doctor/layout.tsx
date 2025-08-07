@@ -27,7 +27,7 @@ export default function DoctorLayout({ children }: { children: React.ReactNode }
                         {user?.email ? (
                             <>
                                 <p className="text-lg font-semibold text-gray-700">Welcome,</p>
-                                <p className="text-gray-500 text-sm">Dr. {user.email.split('@')[0]}</p>
+                                <p className="text-gray-500 text-sm">Dr. {user.firstname} {user.lastname}</p>
                             </>
                         ) : (
                             <p className="text-gray-500 text-sm">Welcome, Doctor</p>
