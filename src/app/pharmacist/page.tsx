@@ -46,6 +46,7 @@ export default function PharmacistDashboardPage() {
             await api.put(`/api/prescription/${prescriptionId}`, { status: 2 }); // Dispensed = 2
             // Re-fetch prescriptions to update the list
             fetchPrescriptions();
+            alert('Prescription has been fulfilled');
         } catch (err) {
             console.error('Failed to fulfill prescription:', err);
             alert('Failed to fulfill prescription.');
