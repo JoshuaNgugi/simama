@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/services/api';
 import { useRouter } from 'next/navigation';
-import { HomeIcon, UserIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'; // Importing icons
+import { HomeIcon, UserIcon, ArrowRightStartOnRectangleIcon, BellIcon } from '@heroicons/react/24/outline'; // Importing icons
 
 type Prescription = {
     id: string;
@@ -68,6 +68,10 @@ export default function PatientDashboardPage() {
                         <a href="/patient" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
                             <HomeIcon className="h-5 w-5" />
                             <span>Dashboard</span>
+                        </a>
+                        <a href="/patient/prescriptions" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                            <BellIcon className="h-5 w-5" />
+                            <span>My Prescriptions</span>
                         </a>
                         <a href="/patient/profile" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
                             <UserIcon className="h-5 w-5" />
