@@ -8,6 +8,7 @@ import { useState } from 'react';
 import api from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import Cookies from 'js-cookie';
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 // Define form validation schema
 const loginFormSchema = z.object({
@@ -22,6 +23,7 @@ export function LoginForm() {
     const { login } = useAuth();
     const router = useRouter();
     const [error, setError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const {
         register,
@@ -71,14 +73,36 @@ export function LoginForm() {
 
             {/* Password Input */}
             <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                <input
-                    id="password"
-                    type="password"
-                    {...register('password')}
-                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-                />
-                {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+                <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                >
+                    Password
+                </label>
+                <div className="relative">
+                    <input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        {...register("password")}
+                        className="mt-1 block w-full px-3 py-2 pr-10 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                    >
+                        {showPassword ? (
+                            <EyeSlashIcon className="h-5 w-5" />
+                        ) : (
+                            <EyeIcon className="h-5 w-5" />
+                        )}
+                    </button>
+                </div>
+                {errors.password && (
+                    <p className="mt-1 text-sm text-red-600">
+                        {errors.password.message}
+                    </p>
+                )}
             </div>
 
             {/* Role Selection */}
