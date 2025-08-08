@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/services/api';
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowRightIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
@@ -38,11 +38,15 @@ enum PrescriptionStatus {
     Rejected = 3
 }
 
+const ITEMS_PER_PAGE = 5;
+
 export default function DoctorDashboardPage() {
     const { user } = useAuth();
     const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchPrescriptions = async () => {
         if (!user) return;
@@ -85,13 +89,24 @@ export default function DoctorDashboardPage() {
         return null;
     }
 
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    const currentPrescriptions = prescriptions.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(prescriptions.length / ITEMS_PER_PAGE);
+
+    const paginate = (pageNumber: number) => {
+        if (pageNumber > 0 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
+
     return (
         <>
             <div className="flex justify-between items-center mb-8">
                 <h2 className="text-3xl font-bold text-gray-800">Doctor Dashboard</h2>
                 <Link
                     href="/doctor/prescriptions/create"
-                    className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-200"
+                    className="px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition-colors duration-200"
                 >
                     Create New Prescription
                 </Link>
@@ -105,10 +120,10 @@ export default function DoctorDashboardPage() {
                 )}
                 {!isLoading && !error && prescriptions.length > 0 && (
                     <ul className="divide-y divide-gray-200">
-                        {prescriptions.map(prescription => (
+                        {currentPrescriptions.map(prescription => (
                             <li key={prescription.id} className="py-4 flex justify-between items-center group">
                                 <Link href={`/prescription/${prescription.id}`} className="flex-grow">
-                                    <div className="flex-grow group-hover:text-indigo-600 transition-colors duration-200">
+                                    <div className="flex-grow group-hover:text-teal-600 transition-colors duration-200">
                                         <p className="text-lg font-medium text-gray-900">
                                             {prescription.drug.name} for {prescription.patient.firstName} {prescription.patient.lastName}
                                         </p>
@@ -132,6 +147,27 @@ export default function DoctorDashboardPage() {
                             </li>
                         ))}
                     </ul>
+                )}
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="flex justify-between items-center mt-6">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="flex items-center px-4 py-2 rounded-lg text-gray-700 border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <ArrowLeftIcon className="h-5 w-5 mr-2" /> Previous
+                        </button>
+                        <span className="text-gray-700">Page {currentPage} of {totalPages}</span>
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="flex items-center px-4 py-2 rounded-lg text-gray-700 border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Next <ArrowRightIcon className="h-5 w-5 ml-2" />
+                        </button>
+                    </div>
                 )}
             </div>
         </>

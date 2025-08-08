@@ -34,15 +34,15 @@ export default function DoctorLayout({ children }: { children: React.ReactNode }
                         )}
                     </div>
                     <nav className="space-y-2">
-                        <a href="/doctor" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                        <a href="/doctor" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-teal-50 hover:text-teal-600 transition-colors duration-200">
                             <HomeIcon className="h-5 w-5" />
                             <span>Dashboard</span>
                         </a>
-                        <a href="/doctor/prescriptions/create" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                        <a href="/doctor/prescriptions/create" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-teal-50 hover:text-teal-600 transition-colors duration-200">
                             <PlusIcon className="h-5 w-5" />
                             <span>New Prescription</span>
                         </a>
-                        <a href="/doctor/patients" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                        <a href="/doctor/patients" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-teal-50 hover:text-teal-600 transition-colors duration-200">
                             <UserGroupIcon className="h-5 w-5" />
                             <span>My Patients</span>
                         </a>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/services/api';
 import { useRouter } from 'next/navigation';
-import { HomeIcon, ArchiveBoxIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ArchiveBoxIcon, ArrowRightStartOnRectangleIcon, ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { FulfillConfirmationModal } from '@/components/FulfillConfirmationModal';
 import { toast } from 'react-hot-toast';
@@ -39,12 +39,16 @@ enum PrescriptionStatus {
     Rejected = 3
 }
 
+const ITEMS_PER_PAGE = 5;
+
 export default function PharmacistDashboardPage() {
     const { user, logout } = useAuth();
     const router = useRouter();
     const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
@@ -101,6 +105,17 @@ export default function PharmacistDashboardPage() {
 
     const activePrescriptions = prescriptions.filter(p => p.status === PrescriptionStatus.Pending);
 
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    const currentPrescriptions = prescriptions.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(prescriptions.length / ITEMS_PER_PAGE);
+
+    const paginate = (pageNumber: number) => {
+        if (pageNumber > 0 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
+
     return (
         <>
             <div className="flex min-h-screen bg-gray-100 font-sans">
@@ -113,11 +128,11 @@ export default function PharmacistDashboardPage() {
                             <p className="text-gray-500 text-sm">{user.firstname} {user.lastname}</p>
                         </div>
                         <nav className="space-y-2">
-                            <a href="/pharmacist" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                            <a href="/pharmacist" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-teal-50 hover:text-teal-600 transition-colors duration-200">
                                 <HomeIcon className="h-5 w-5" />
                                 <span>Dashboard</span>
                             </a>
-                            <a href="/pharmacist/dispense" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                            <a href="/pharmacist/dispense" className="flex items-center space-x-2 p-3 rounded-lg text-gray-700 hover:bg-teal-50 hover:text-teal-600 transition-colors duration-200">
                                 <ArchiveBoxIcon className="h-5 w-5" />
                                 <span>Dispense</span>
                             </a>
@@ -144,7 +159,7 @@ export default function PharmacistDashboardPage() {
                                 {activePrescriptions.map(prescription => (
                                     <li key={prescription.id} className="py-4 flex justify-between items-center group">
                                         <Link href={`/prescription/${prescription.id}`} className="flex-grow">
-                                            <div className="flex-grow group-hover:text-indigo-600 transition-colors duration-200">
+                                            <div className="flex-grow group-hover:text-teal-600 transition-colors duration-200">
                                                 <p className="text-lg font-medium text-gray-900">
                                                     {prescription.drug.name} for {prescription.patient.firstName} {prescription.patient.lastName}
                                                 </p>
@@ -165,6 +180,27 @@ export default function PharmacistDashboardPage() {
                                     </li>
                                 ))}
                             </ul>
+                        )}
+
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="flex justify-between items-center mt-6">
+                                <button
+                                    onClick={() => paginate(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="flex items-center px-4 py-2 rounded-lg text-gray-700 border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <ArrowLeftIcon className="h-5 w-5 mr-2" /> Previous
+                                </button>
+                                <span className="text-gray-700">Page {currentPage} of {totalPages}</span>
+                                <button
+                                    onClick={() => paginate(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="flex items-center px-4 py-2 rounded-lg text-gray-700 border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Next <ArrowRightIcon className="h-5 w-5 ml-2" />
+                                </button>
+                            </div>
                         )}
                     </div>
                 </main>

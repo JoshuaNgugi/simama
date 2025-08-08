@@ -32,8 +32,7 @@ export function FulfillConfirmationModal({
                 <div className="text-center mb-6">
                     <CheckCircleIcon className="h-16 w-16 text-teal-500 mx-auto mb-4" />
                     <p className="text-gray-600">
-                        Are you sure you want to mark the prescription for {prescriptionDetails?.drugName}
-                        as fulfilled for {prescriptionDetails?.patientName}?
+                        Are you sure you want to mark the prescription for {prescriptionDetails?.drugName} as fulfilled for {prescriptionDetails?.patientName}?
                     </p>
                 </div>
                 <div className="flex justify-end space-x-4">
