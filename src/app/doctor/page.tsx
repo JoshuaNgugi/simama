@@ -7,6 +7,7 @@ import { ArrowLeftIcon, ArrowRightIcon, TrashIcon } from '@heroicons/react/24/ou
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
+import { DeleteConfirmationModal } from '@/components/DeleteConfirmationModal';
 
 type User = {
     id: number;
@@ -48,6 +49,9 @@ export default function DoctorDashboardPage() {
 
     const [currentPage, setCurrentPage] = useState(1);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
+
     const fetchPrescriptions = async () => {
         if (!user) return;
 
@@ -73,15 +77,17 @@ export default function DoctorDashboardPage() {
     }, [user]);
 
     const handleDeletePrescription = async (prescriptionId: number) => {
-        if (window.confirm('Are you sure you want to delete this prescription? This action cannot be undone.')) {
-            try {
-                await api.delete(`/api/prescription/${prescriptionId}`);
-                setPrescriptions(prescriptions.filter(p => p.id !== prescriptionId));
-                toast.success('Prescription deleted successfully.');
-            } catch (err: any) {
-                console.error('Failed to delete prescription:', err);
-                toast.error('Failed to delete prescription. Please try again.');
-            }
+        if (!selectedPrescription || !user) return;
+
+        try {
+            await api.delete(`/api/prescription/${prescriptionId}`);
+            setIsModalOpen(false);
+            setSelectedPrescription(null);
+            setPrescriptions(prescriptions.filter(p => p.id !== prescriptionId));
+            toast.success('Prescription deleted successfully.');
+        } catch (err: any) {
+            console.error('Failed to delete prescription:', err);
+            toast.error('Failed to delete prescription. Please try again.');
         }
     };
 
@@ -139,7 +145,10 @@ export default function DoctorDashboardPage() {
                                     </div>
                                 </Link>
                                 <button
-                                    onClick={() => handleDeletePrescription(prescription.id)}
+                                    onClick={() => {
+                                        setSelectedPrescription(prescription);
+                                        setIsModalOpen(true);
+                                    }}
                                     className="p-2 ml-4 rounded-full text-red-500 hover:bg-red-50 transition-colors duration-200"
                                 >
                                     <TrashIcon className="h-5 w-5" />
@@ -170,6 +179,25 @@ export default function DoctorDashboardPage() {
                     </div>
                 )}
             </div>
+            {/* Delete Modal */}
+            <DeleteConfirmationModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={() => {
+                    if (selectedPrescription) {
+                        handleDeletePrescription(selectedPrescription.id);
+                        setIsModalOpen(false);
+                    }
+                }}
+                prescriptionDetails={
+                    selectedPrescription
+                        ? {
+                            drugName: selectedPrescription.drug.name,
+                            patientName: `${selectedPrescription.patient.firstName} ${selectedPrescription.patient.lastName}`
+                        }
+                        : null
+                }
+            />
         </>
     );
 }

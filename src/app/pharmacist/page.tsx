@@ -107,8 +107,8 @@ export default function PharmacistDashboardPage() {
 
     const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-    const currentPrescriptions = prescriptions.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(prescriptions.length / ITEMS_PER_PAGE);
+    const currentPrescriptions = activePrescriptions.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(activePrescriptions.length / ITEMS_PER_PAGE);
 
     const paginate = (pageNumber: number) => {
         if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -156,7 +156,7 @@ export default function PharmacistDashboardPage() {
                         {!isLoading && !error && activePrescriptions.length === 0 && <p className="text-gray-500">There are no pending prescriptions.</p>}
                         {!isLoading && !error && activePrescriptions.length > 0 && (
                             <ul className="divide-y divide-gray-200">
-                                {activePrescriptions.map(prescription => (
+                                {currentPrescriptions.map(prescription => (
                                     <li key={prescription.id} className="py-4 flex justify-between items-center group">
                                         <Link href={`/prescription/${prescription.id}`} className="flex-grow">
                                             <div className="flex-grow group-hover:text-teal-600 transition-colors duration-200">
