@@ -9,6 +9,7 @@ import api from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import Cookies from 'js-cookie';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { AxiosError } from 'axios';
 
 // Define form validation schema
 const loginFormSchema = z.object({
@@ -43,9 +44,14 @@ export function LoginForm() {
             login(token);
 
             router.push(`/${data.role}`);
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Login failed:', err);
-            const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials and try again.';
+            let errorMessage = 'Login failed. Please check your credentials and try again.';
+            if (err instanceof AxiosError) {
+                errorMessage = err.response?.data?.message;
+            } else {
+                console.error('Unexpected error:', err);
+            }
             setError(errorMessage);
         }
     };

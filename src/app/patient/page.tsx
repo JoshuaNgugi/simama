@@ -58,7 +58,7 @@ export default function PatientDashboardPage() {
                 const response = await api.get('/api/prescription');
                 setPrescriptions(response.data);
                 setError(null);
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error('Failed to fetch prescriptions:', err);
                 setError('Failed to load prescriptions. Please try again.');
             } finally {

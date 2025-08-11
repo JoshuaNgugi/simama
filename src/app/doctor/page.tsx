@@ -64,7 +64,7 @@ export default function DoctorDashboardPage() {
             );
             setPrescriptions(doctorPrescriptions);
             setError(null);
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Failed to fetch prescriptions:', err);
             setError('Failed to load prescriptions. Please try again.');
         } finally {
@@ -85,7 +85,7 @@ export default function DoctorDashboardPage() {
             setSelectedPrescription(null);
             setPrescriptions(prescriptions.filter(p => p.id !== prescriptionId));
             toast.success('Prescription deleted successfully.');
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Failed to delete prescription:', err);
             toast.error('Failed to delete prescription. Please try again.');
         }

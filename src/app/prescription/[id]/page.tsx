@@ -12,7 +12,6 @@ import {
     PencilSquareIcon,
     BeakerIcon,
     CalendarIcon,
-    TagIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -48,7 +47,6 @@ enum PrescriptionStatus {
 
 export default function PrescriptionDetailPage() {
     const { user } = useAuth();
-    const router = useRouter();
     const { id } = useParams();
     const [prescription, setPrescription] = useState<Prescription | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +62,7 @@ export default function PrescriptionDetailPage() {
                 const response = await api.get(`/api/prescription/${id}`);
                 setPrescription(response.data);
                 setError(null);
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error('Failed to fetch prescription:', err);
                 setError('Failed to load prescription details. Please try again.');
             } finally {

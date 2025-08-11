@@ -42,7 +42,7 @@ export function middleware(request: NextRequest) {
                 }
             } catch (error) {
                 // Invalid token, do nothing and let the request proceed to the public page
-                console.error('Invalid token in cookies');
+                console.error('Invalid token in cookies', error);
             }
         }
         return NextResponse.next(); // Continue to the public page

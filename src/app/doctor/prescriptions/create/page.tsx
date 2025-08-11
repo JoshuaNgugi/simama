@@ -9,6 +9,7 @@ import api from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { AxiosError } from 'axios';
 
 // Define types for fetched data
 type Patient = { id: string; firstName: string; lastName: string };
@@ -45,7 +46,7 @@ export default function CreatePrescriptionPage() {
                 ]);
                 setPatients(patientsResponse.data);
                 setDrugs(drugsResponse.data);
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error('Failed to fetch data for form:', err);
                 setApiError('Failed to load patients or drugs. Please try again.');
             } finally {
@@ -81,9 +82,14 @@ export default function CreatePrescriptionPage() {
 
             toast.success('Prescription created successfully!');
             router.push('/doctor'); // Redirect back to dashboard
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Failed to create prescription:', err);
-            const errorMessage = err.response?.data?.message || 'Failed to create prescription.';
+            let errorMessage = 'Failed to create prescription.';
+            if (err instanceof AxiosError) {
+                errorMessage = err.response?.data?.message;
+            } else {
+                console.error('Unexpected error:', err);
+            }
             setApiError(errorMessage);
             toast.error(errorMessage);
         }

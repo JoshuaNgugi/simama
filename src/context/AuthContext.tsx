@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import api from '@/services/api';
 import Cookies from 'js-cookie';
 
 type User = {

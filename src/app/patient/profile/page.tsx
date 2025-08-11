@@ -30,7 +30,7 @@ export default function PatientProfilePage() {
             try {
                 const response = await api.get(`/api/patients/${user.id}`);
                 setPatient(response.data);
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error('Failed to fetch patient data:', err);
                 setError('Failed to load your profile. Please try again.');
             } finally {

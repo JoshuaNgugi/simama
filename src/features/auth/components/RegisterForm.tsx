@@ -6,6 +6,7 @@ import * as z from 'zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { AxiosError } from 'axios';
 
 const registerFormSchema = z
     .object({
@@ -37,21 +38,26 @@ export function RegisterForm() {
     const onSubmit = async (data: RegisterFormValues) => {
         try {
             setError(null);
-            const registrationData = {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                password: data.password,
-            };
+            // const registrationData = {
+            //     firstName: data.firstName,
+            //     lastName: data.lastName,
+            //     email: data.email,
+            //     password: data.password,
+            // };
 
             // TODO: add this on backend
             // await api.post('/api/auth/register', registrationData);
 
             toast.success('Site is still under active development, we will be adding Registration soon.');
             router.push('/login');
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Registration failed:', err);
-            const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
+            let errorMessage = 'Registration failed. Please try again.';
+            if (err instanceof AxiosError) {
+                errorMessage = err.response?.data?.message || errorMessage;
+            } else {
+                console.error('Unexpected error:', err);
+            }
             setError(errorMessage);
             toast.error(errorMessage);
         }
