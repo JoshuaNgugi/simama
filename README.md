@@ -122,7 +122,8 @@ npm (npm v8.x or later)
 ### Installation
 1. Clone the repository:
 
-`git clone https://github.com/JoshuaNgugi/simama]`
+`git clone https://github.com/JoshuaNgugi/simama`
+
 `cd simama`
 
 2. Install dependencies:
@@ -132,7 +133,7 @@ npm (npm v8.x or later)
 3. Ensure Backend is Running:
 This frontend application relies on a separate ASP.NET Core Web API backend. 
 Please see https://github.com/JoshuaNgugi/Simama.API for more on this.
-Make sure your backend API is running and accessible at the base URL configured in `src/services/api.ts` (e.g., https://your-backend-api.com/v1).
+Make sure your backend API is running and accessible at the base URL configured in `src/services/api.ts`.
 
 4. Running the Application
 
